@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>JS Calculator</title>
+    <style>
+      #display {
+        font-size: 3rem;
+      }
+    </style>
+    <script>
+      let trailingResult = 0;
+      let operationOptions = ['divide', 'multiply', 'subtract', 'add'];
+      let workingOperation = "";
+
+
+      function updateDisplay(input) {
+        let display = document.getElementById("display");
+        // let secondaryDisplay = document.getElementById("secondaryDisplay");
+
+        if (display.innerHTML === "0" && operationOptions.indexOf(input) === -1) {
+          if (input === "decimal") {
+            display.innerHTML = "0.";
+          } else {
+            display.innerHTML = input;
+          }
+        } else if (operationOptions.indexOf(input) >= 0) {
+          console.log("Dealing with an operation");
+
+          if (workingOperation === "") {
+            // Dealing without an operand
+            workingOperation = input;
+            trailingResult = display.innerHTML;
+            display.innerHTML = 0;
+          } else {
+            // Dealing with a set operand
+            trailingResult = calculate(trailingResult, display.innerHTML, workingOperation)
+            // secondaryDisplay.innerHTML = trailingResult;
+            display.innerHTML = 0;
+            workingOperation = input;
+          }
+        } else if (input === "equals") {
+          display.innerHTML = calculate(trailingResult, display.innerHTML, workingOperation);
+          trailingResult = display.innerHTML;
+          workingOperation = "";
+        } else if (input === "decimal") {
+          // add decimal if there was no decimal. Dont add if it's already there
+          // console.log("decimal clicked");
+          if (display.innerHTML.indexOf(".") === -1) {
+            display.innerHTML += ".";
+          }
+          // console.log("Decimal skipped because theres already a decimal there.")
+        } else if (input === "negative-value") {
+          // console.log("negative value selected");
+          // When - value trigger, add the negative sign to the value
+          if (display.innerHTML.indexOf("-1") === -1) {
+            display.innerHTML = "-" + display.innerHTML;
+          } // - value times - value return positive value
+          else if (display.innerHTML.indexOf("-1") === 0) {
+            display.innerHTML = display.innerHTML.slice(1, display.innerHTML.length);
+          }
+        }
+         else {
+          display.innerHTML += input;
+        }
+        // console.log(trailingResult, " <= trailingResult", display.innerHTML, " <= display.innerHTML", workingOperation, " <= workingOperation")
+      }
+
+      function clearDisplay() {
+        let display = document.getElementById("display");
+        display.innerHTML = 0;
+      }
+
+      //input different operands to calculate the result
+      function calculate(firstNumber, secondNumber, operation) {
+        let result = "";
+        firstNumber = parseFloat(firstNumber);
+        secondNumber = parseFloat(secondNumber);
+        switch(operation) {
+          case "add":
+          console.log("add calculator")
+            result = firstNumber + secondNumber;
+            break;
+          case "subtract":
+          console.log("subtract calculator")
+            result = firstNumber - secondNumber;
+            break;
+          case "multiply":
+          console.log("multiply calculator")
+            result = firstNumber * secondNumber;
+            break;
+          case "divide":
+          console.log("divide calculator")
+            result = firstNumber / secondNumber;
+            break;
+          default:
+            console.log("calculate switch statement missed something")
+        }
+        return result.toString();
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row text-center">
+        <div class="col">
+          <h1>Build a Javascript calculator by <a href="https://github.com/nottohave">nottohave</a></h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="container border mx-auto">
+      <div class="row text-center">
+          <div class="col-12">
+            <div id="display" class="bg-white text-dark margin-white my-3 py-5 ">0</div>
+          </div>
+      </div>
+
+
+      <div class="row text-center text-white">
+        <div class="col-4">
+          <a class="btn btn-dark btn-lg btn-block" id="seven" onclick="updateDisplay(7)">7</a>
+          <a class="btn btn-dark btn-lg btn-block" id="four" onclick="updateDisplay(4)">4</a>
+          <a class="btn btn-dark btn-lg btn-block" id="one" onclick="updateDisplay(1)">1</a>
+          <a class="btn btn-dark btn-lg btn-block" id="zero" onclick="updateDisplay(0)">0</a>
+        </div>
+
+        <div class="col-4">
+          <a class="btn btn-dark btn-lg btn-block" id="eight" onclick="updateDisplay(8)">8</a>
+          <a class="btn btn-dark btn-lg btn-block" id="five" onclick="updateDisplay(5)">5</a>
+          <a class="btn btn-dark btn-lg btn-block" id="two" onclick="updateDisplay(2)">2</a>
+          <a class="btn btn-secondary btn-lg btn-block" id="equals" onclick="updateDisplay('equals')">=</a>
+        </div>
+
+        <div class="col-4">
+          <a class="btn btn-dark btn-lg btn-block" id="nine" onclick="updateDisplay(9)">9</a>
+          <a class="btn btn-dark btn-lg btn-block" id="six" onclick="updateDisplay(6)">6</a>
+          <a class="btn btn-dark btn-lg btn-block" id="three" onclick="updateDisplay(3)">3</a>
+          <a class="btn btn-warning btn-lg btn-block" id="clear" onclick="clearDisplay()">AC</a>
+
+        </div>
+      </div>
+
+      <div class="row text-center pt-3 text-white">
+        <div class="col">
+          <a class="btn btn-dark btn-lg btn-block" id="add" onclick="updateDisplay('add')">+</a>
+        </div>
+
+        <div class="col">
+          <a class="btn btn-dark btn-lg btn-block" id="subtract" onclick="updateDisplay('subtract')">-</a>
+        </div>
+
+        <div class="col">
+          <a class="btn btn-dark btn-lg btn-block" id="multiply" onclick="updateDisplay('multiply')">*</a>
+        </div>
+
+        <div class="col">
+          <a class="btn btn-dark btn-lg btn-block" id="divide" onclick="updateDisplay('divide')">/</a>
+        </div>
+
+        <div class="col">
+          <a class="btn btn-dark btn-lg btn-block" id="decimal" onclick="updateDisplay('decimal')">.</a>
+        </div>
+
+        <div class="col">
+          <a class="btn btn-dark btn-lg btn-block" id="negative-value" onclick="updateDisplay('negative-value')">(-)</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
